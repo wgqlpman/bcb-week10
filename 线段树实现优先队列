@@ -1,0 +1,60 @@
+struct anode
+{
+    int t;
+    int d;
+};
+int n;
+int num[10001],maxx[40001];
+struct anode node[10001];
+ 
+void build(int key, int low, int high)//id
+{
+	if (low == high)
+	{
+		maxx[key] = low;
+		return;
+	}
+	int mid = (low + high) / 2;
+	build(key * 2, low, mid);
+	build(key * 2 + 1, mid + 1, high);
+	maxx[key] = (num[maxx[key * 2]] > num[maxx[key * 2 + 1]]) ? maxx[key * 2] : maxx[key * 2 + 1];
+}
+ 
+void update(int key, int low, int high, int uplace)//id
+{
+	if (low == high)
+	{
+		maxx[key] = low;
+		return;
+	}
+	int mid = (low + high) / 2;
+	if (uplace <= mid)update(key * 2, low, mid, uplace);
+	else update(key * 2 + 1, mid + 1, high, uplace);
+	maxx[key] = (num[maxx[key * 2]] > num[maxx[key * 2 + 1]]) ? maxx[key * 2] : maxx[key * 2 + 1];
+}
+ 
+int query(int key, int low, int high, int x, int y)//id
+{
+	if (low == x && high == y)return maxx[key];
+	int mid = (low + high) / 2;
+	if (mid < x)return query(key * 2 + 1, mid + 1, high, x, y);
+	if (mid >= y)return query(key * 2, low, mid, x, y);
+	int a = query(key * 2, low, mid, x, mid);
+	int b = query(key * 2 + 1, mid + 1, high, mid + 1, y);
+	return  (num[a]>num[b]) ? a : b;
+}
+ 
+void push(int loc)
+{
+    num[loc]=node[loc].t; ///根据实际情况修改
+    update(1,1,n,loc);
+}
+void pop(int loc)
+{
+    num[loc]=0; ///根据实际情况修改
+    update(1,1,n,loc);
+}
+int top()//id
+{
+    return query(1,1,n,1,n);
+}
