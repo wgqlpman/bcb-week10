@@ -1,0 +1,14 @@
+		// TEMPLATE CLASS priority_queue
+template<class _Ty,
+	class _Container = vector<_Ty>,
+	class _Pr = less<typename _Container::value_type> >
+	class priority_queue
+	{	// priority queue implemented with a _Container
+public:
+	......
+	一堆函数
+	......
+protected:
+	_Container c;	// the underlying container
+	_Pr comp;	// the comparator functor
+	};
