@@ -1,0 +1,107 @@
+#include<iostream>
+#include <vector>
+using namespace std;
+ 
+template<typename T>
+bool cmp(T a, T b)
+{
+    return a < b; //最大堆
+}
+ 
+template<typename T>
+void exchange(T* a, T* b)
+{
+    T tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+ 
+int LeftChild(int id)
+{
+    return id * 2;
+}
+int RightChild(int id)
+{
+    return id * 2 + 1;
+}
+int Parent(int id)
+{
+    return id/2;
+}
+ 
+template<typename T>
+void AdjustHeap(T* arr, int rootId, int size)
+{
+    int largest = rootId, left = LeftChild(rootId), right = RightChild(rootId);
+    if (left < size && cmp(arr[largest], arr[left]))largest = left;
+    if (right < size && cmp(arr[largest], arr[right]))largest = right;
+    if (largest == rootId)return;
+    exchange(arr + rootId, arr + largest);
+    AdjustHeap(arr, largest, size);
+}
+ 
+template<typename T>
+void HeapIncrese(T* arr, int size, int id, T newValue)
+{
+    arr[id] = newValue;
+    while (id > 0 && cmp(arr[Parent(id)], arr[id])) {
+        exchange(arr + id, arr + Parent(id));
+        id = Parent(id);
+    }
+}
+ 
+template<typename T>
+void HeapInsert(T* arr, int &size,T value)
+{
+    HeapIncrese(arr,size+1,size,value);
+    size++;
+}
+ 
+int g_size;
+void Init()
+{
+    g_size = 0;
+}
+template<typename T>
+T Top(T* arr)
+{
+    return arr[0];
+}
+template<typename T>
+void Push(T* arr, T value)
+{
+    HeapInsert(arr,g_size,value);
+}
+template<typename T>
+void Pop(T* arr)
+{
+    g_size--;
+    exchange(arr, arr+g_size);
+    AdjustHeap(arr, 0, g_size);
+}
+ 
+int main()
+{
+    int q[10];
+    Init();
+    Push(q,4);
+    Push(q,2);
+    Push(q,6);
+    Push(q,3);
+    Push(q,4);
+    Push(q,5);
+    cout<<Top(q)<<" ";
+    Pop(q);
+    cout<<Top(q)<<" ";
+    Pop(q);
+    cout<<Top(q)<<" ";
+    Pop(q);
+    cout<<Top(q)<<" ";
+    Pop(q);
+    cout<<Top(q)<<" ";
+    Pop(q);
+    cout<<Top(q)<<" ";
+    Pop(q);
+    cout<<endl<<g_size;
+    return 0;
+}
