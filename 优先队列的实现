@@ -1,0 +1,83 @@
+//最小堆的实现
+#include <iostream>
+#define Max_N   1005
+
+using namespace std;
+
+int Heap_size;
+int Heap[Max_N];
+
+//插入操作
+void push(int x)
+{
+    int indx=++Heap_size;//首先插入到最后一个位置
+    //向上调整
+    while(indx>1)//只有i>1才会有父节点
+    {
+        int parent_indx=indx/2;//父节点编号
+        if(Heap[parent_indx]<=x)//没有上下颠倒就结束调整
+            break;
+        Heap[indx]=Heap[parent_indx];//大小颠倒就将当前节点上调
+        indx=parent_indx;
+
+    }
+    Heap[indx]=x;
+}
+
+//删除操作
+int pop()
+{
+    int result=Heap[0];//获取最值
+    int x=Heap[--Heap_size];//相当于将最后的一个元素放到根节点
+    int index=1;
+    while(2*index<=Heap_size)//一定要有子节点
+    {
+        int L_son_index=2*index;
+        int R_son_index=2*index+1;
+        //比较儿子节点的最值
+        int Min_index=L_son_index;
+        if(R_son_index<=Heap_size && Heap[R_son_index]<Heap[Min_index])
+            Min_index=R_son_index;
+        //如果没有上下颠倒就结束
+        if(Heap[Min_index]>=x)
+            break;
+        //上下颠倒就交换
+        Heap[index]=Heap[Min_index];
+        index=Min_index;
+    }
+    Heap[index]=x;
+    return result;
+}
+
+void Build_Heap(int data[],int n)
+{
+    //创建一个空堆
+    Heap_size=0;
+    for(int i=0;i<n;i++)//逐个插入元素
+        push(data[i]);
+
+}
+
+
+int main()
+{
+    int n;
+    int data[Max_N];
+    cin>>n;
+    for(int i=0;i<n;i++)
+        cin>>data[i];
+    cout<<"使用下面数据构建堆"<<endl;
+    for(int i=0;i<n;i++)
+        cout<<data[i]<<" ";
+    cout<<endl;
+    Build_Heap(data,n);
+    cout<<"堆中数据："<<endl;
+    for(int i=1;i<=Heap_size;i++)
+        cout<<Heap[i]<<" ";
+    cout<<endl;
+    return 0;
+}
+/*
+9
+9 7 10 4 5 19 23 6 7
+*/
